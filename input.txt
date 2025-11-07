@@ -22,6 +22,7 @@ tarea SaludoRapido {
     print("¡Hola desde el segundo trabajo!");
 }
 
+
 ---NUEVO_TRABAJO---
 
 // --- TRABAJO 3 ---
@@ -37,3 +38,14 @@ ir_a Exito si variable_B == "PENDIENTE";
 tarea Exito {
     print("Flujo 3 Exitoso");
 }
+
+---NUEVO_TRABAJO---
+
+// --- TRABAJO 4 ---
+
+tarea A {
+    print("Tarea A");
+}
+
+ir_a Tarea_Inexistente si estado == "OK"; 
+// La tarea Tarea_Inexistente no está definida
