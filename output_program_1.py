@@ -23,8 +23,8 @@ def fin():
     print("Terminado Flujo 1")
     return
 
-# --- Punto de Entrada ---
+#  Punto de Entrada 
 if __name__ == '__main__':
-    print('--- Iniciando Flujo de Trabajo ---')
+    print('Iniciando Flujo de Trabajo ')
     inicio()
-    print('--- Flujo de Trabajo Terminado ---')
+    print('Flujo de Trabajo Terminado ')

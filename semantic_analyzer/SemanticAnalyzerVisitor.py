@@ -1,15 +1,12 @@
 # Archivo: semantic_analyzer/SemanticAnalyzerVisitor.py
 from generated.gramaticaVisitor import gramaticaVisitor
 from generated.gramaticaParser import gramaticaParser
-# --- ¡NUEVA IMPORTACIÓN! ---
 from semantic_analyzer.IntermediateRepresentation import IR
 
 class SymbolTable:
-    # ... (Tu clase SymbolTable sigue igual que antes, no la borres) ...
     def __init__(self):
         self.tasks = {}
         self.variables = {}
-        # --- ¡NUEVO! ---
         # Mapeamos nombres de tareas a etiquetas TAC (ej: 'inicio' -> 'L_inicio')
         self.task_labels = {} 
 
@@ -17,7 +14,6 @@ class SymbolTable:
         if name in self.tasks:
             raise Exception(f"Error Semántico: Tarea '{name}' ya está definida.")
         self.tasks[name] = node
-        # --- ¡NUEVO! ---
         self.task_labels[name] = label # Guardamos la etiqueta
 
     def define_variable(self, name, node):
@@ -30,8 +26,7 @@ class SymbolTable:
     def check_variable_exists(self, name):
         if name not in self.variables:
             raise Exception(f"Error Semántico: Variable no definida '{name}' usada en condición.")
-            
-    # --- ¡NUEVO! ---
+
     def get_task_label(self, name):
         """Devuelve la etiqueta TAC para una tarea."""
         self.check_task_exists(name) # Validamos de paso
@@ -41,23 +36,26 @@ class SymbolTable:
 class SemanticAnalyzerVisitor(gramaticaVisitor):
     def __init__(self):
         self.symbol_table = SymbolTable()
-        # --- ¡NUEVO! ---
         # El visitor ahora tiene su propio generador de IR
         self.ir = IR()
         self.current_task_transitions = [] # Almacén temporal para las transiciones
 
     def visitProgram(self, ctx:gramaticaParser.ProgramContext):
-        # --- PRIMERA PASADA: Recolección de definiciones (igual que antes) ---
+        # PRIMERA PASADA: Recolección de definiciones (igual que antes) 
         
-        # 1. Recolectar tareas
+        # 1. Bucle de Tareas:
+        # Recorre todos los nodos hijos del programa.
         for item in ctx.getChildren():
+            # Si el nodo es una 'tarea'
             if isinstance(item, gramaticaParser.TaskContext):
+                # ...saca su nombre y su etiqueta, y los GUARDA en la SymbolTable.
                 task_name = item.ID().getText()
                 task_label = f"L_TAREA_{task_name}" 
                 self.symbol_table.define_task(task_name, item, task_label)
 
         # 2. Recolectar variables
         for item in ctx.getChildren():
+            # Si es una tarea, mira DENTRO de ella
             if isinstance(item, gramaticaParser.TaskContext):
                 for stmt in item.statement():
                     if stmt.assignment_stmt():
@@ -80,8 +78,7 @@ class SemanticAnalyzerVisitor(gramaticaVisitor):
         
         self.task_transitions_map = temp_transitions
 
-        # --- SEGUNDA PASADA: Validación y Generación de IR ---
-        # ¡¡CAMBIO IMPORTANTE!!
+        # SEGUNDA PASADA: Validación y Generación de IR 
         # En lugar de llamar a self.visitChildren(ctx) (que visita TAREAS y TRANSICIONES),
         # iteramos manualmente y visitamos SOLO las TAREAS.
         # Nuestras tareas (visitTask) ahora son responsables de
@@ -97,7 +94,7 @@ class SemanticAnalyzerVisitor(gramaticaVisitor):
         task_name = ctx.ID().getText()
         task_label = self.symbol_table.get_task_label(task_name)
         
-        # --- Generar TAC ---
+        #  Generar TAC 
         self.ir.add_instruction(op=f"{task_label}:") # Etiqueta de inicio de tarea
         
         # Visita los statements (print, assign)
@@ -117,7 +114,7 @@ class SemanticAnalyzerVisitor(gramaticaVisitor):
         # Validamos y obtenemos la etiqueta de la tarea destino
         target_label = self.symbol_table.get_task_label(target_task_name)
         
-        # --- Generar TAC ---
+        # Generar TAC 
         # 1. Visitar la condición, que devolverá el 'temp' (ej: t1)
         temp_var = self.visit(ctx.condition()) 
         
@@ -141,7 +138,7 @@ class SemanticAnalyzerVisitor(gramaticaVisitor):
         var_name = ctx.ID().getText()
         value = ctx.VALUE().getText()
         
-        # --- Generar TAC ---
+        # Generar TAC 
         # estado = "OK"
         self.ir.add_instruction(op='=', arg1=value, result=var_name)
         return
@@ -149,7 +146,7 @@ class SemanticAnalyzerVisitor(gramaticaVisitor):
     def visitPrint_stmt(self, ctx:gramaticaParser.Print_stmtContext):
         value = ctx.VALUE().getText()
         
-        # --- Generar TAC ---
+        # Generar TAC 
         # PRINT "Comenzando"
         self.ir.add_instruction(op='PRINT', arg1=value)
         return
@@ -162,7 +159,7 @@ class SemanticAnalyzerVisitor(gramaticaVisitor):
         op = ctx.comparator().getText()
         value = ctx.VALUE().getText()
 
-        # --- Generar TAC ---
+        # Generar TAC 
         # 1. Generar una variable temporal para el resultado
         temp_var = self.ir.new_temp()
         

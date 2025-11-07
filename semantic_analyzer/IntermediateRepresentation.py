@@ -32,7 +32,7 @@ class IR:
         return f"L{self.label_counter}"
 
     def __str__(self):
-        """Formatea las instrucciones para imprimirlas (como en tu ejemplo)."""
+        """Formatea las instrucciones para imprimirlas."""
         output = []
         for inst in self.instructions:
             op = inst['op']
@@ -53,7 +53,6 @@ class IR:
                 output.append(f"    RETURN")
             elif op in ['==', '!=', '>', '<', '>=', '<=']:
                 output.append(f"    {inst['result']} = {inst['arg1']} {op} {inst['arg2']}")
-            # --- ¡CAMBIO IMPORTANTE! ---
             elif op == '':
                 output.append("") # Imprime una línea vacía
             else:
