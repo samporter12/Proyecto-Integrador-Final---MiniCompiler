@@ -1,0 +1,7 @@
+// Flujo 6: Tarea con varias instrucciones
+tarea reporte {
+    print("--- Reporte de Ventas ---");
+    print("Producto A: 100 unidades");
+    print("Producto B: 50 unidades");
+    print("--- Fin del Reporte ---");
+}

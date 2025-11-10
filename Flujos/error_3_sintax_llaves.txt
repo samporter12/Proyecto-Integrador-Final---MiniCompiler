@@ -1,0 +1,3 @@
+// Error 3: Sintáctico - Faltan llaves en 'tarea'
+tarea inicio
+    print("Esto fallará");

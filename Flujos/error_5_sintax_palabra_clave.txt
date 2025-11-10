@@ -1,0 +1,7 @@
+// Error 5: Sintáctico - Falta 'si'
+tarea inicio {
+    estado = "OK";
+}
+// El parser espera 'si' después de 'fin'
+ir_a fin estado == "OK";
+tarea fin {}

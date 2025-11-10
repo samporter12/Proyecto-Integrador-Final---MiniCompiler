@@ -1,0 +1,4 @@
+// Error 2: Léxico - String sin cerrar
+tarea mal_string {
+    print("Esta es una string que nunca se cierra);
+}

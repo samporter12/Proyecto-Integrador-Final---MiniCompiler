@@ -1,0 +1,9 @@
+// Flujo 3: La condición no se cumple
+tarea inicio_flujo_3 {
+    print("Iniciando Flujo 3");
+    estado = "ERROR";
+}
+ir_a exito_flujo_3 si estado == "OK";
+tarea exito_flujo_3 {
+    print("Esto NUNCA deberia imprimirse.");
+}

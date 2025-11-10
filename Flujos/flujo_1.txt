@@ -1,0 +1,9 @@
+// Flujo 1: El ejemplo base del profesor
+tarea inicio {
+    print("Comenzando Flujo 1");
+    estado = "OK";
+}
+ir_a fin si estado == "OK";
+tarea fin {
+    print("Terminado Flujo 1");
+}

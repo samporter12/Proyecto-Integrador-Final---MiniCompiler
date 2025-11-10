@@ -1,0 +1,8 @@
+// Error 6: Sintáctico - 'ir_a' en lugar inválido
+tarea inicio {
+    print("Esto es valido");
+    
+    // Esto es sintácticamente incorrecto
+    ir_a fin si estado == "OK";
+}
+tarea fin {}

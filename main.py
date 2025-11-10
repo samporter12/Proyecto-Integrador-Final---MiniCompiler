@@ -1,5 +1,6 @@
 # Archivo: main.py
-import sys
+import sys  # Módulo para leer argumentos de la línea de comandos
+import os   # Módulo para manejar nombres de archivos y rutas
 import subprocess
 from antlr4 import *
 
@@ -8,39 +9,59 @@ from generated.gramaticaParser import gramaticaParser
 from semantic_analyzer.SemanticAnalyzerVisitor import SemanticAnalyzerVisitor
 from codegen.PythonCodeGenerator import PythonCodeGenerator
 
-def compile_source_code(source_code, job_index):
-    """
-    Función que toma un string de código fuente y lo compila,
-    generando un archivo de salida único basado en el job_index.
-    """
+def main():
+    # PASO 1: Validar la entrada del usuario 
+    if len(sys.argv) != 2:
+        print("Error: Debes proporcionar el nombre del archivo de entrada.")
+        print("Uso: python main.py <nombre_archivo.txt>")
+        return # Salir del script si no se usa correctamente
     
-    print("\n" + "=" * 50)
-    print(f"🚀 INICIANDO COMPILACIÓN (Trabajo #{job_index}) 🚀")
+    input_filename = sys.argv[1] # El nombre del archivo (ej: 'flujo_1.txt')
+
+    # PASO 2: Definir el nombre del archivo de salida
+    # Vamos a crear un nombre de salida basado en la entrada
+    # Ej: 'flujo_1.txt' -> 'output_flujo_1.py'
+    base_name = os.path.basename(input_filename) # 'flujo_1.txt'
+    name_without_ext = os.path.splitext(base_name)[0] # 'flujo_1'
+    output_filename = f"output_{name_without_ext}.py"
+    
+    print("=" * 50)
+    print(f"🚀 INICIANDO COMPILADOR 🚀")
+    print(f"  Archivo de Entrada: {input_filename}")
+    print(f"  Archivo de Salida:  {output_filename}")
     print("=" * 50)
 
-    # 1. Verificar si el código está vacío (ej. después de un split)
-    if not source_code.strip():
-        print("[INFO] Trabajo vacío, omitiendo.")
-        return
-
-    # 2. Fases 1 y 2: Léxico y Sintáctico
-    # ¡Importante! Usamos InputStream(source_code) en lugar de FileStream
+    # FASE 1: Cargar archivo y Análisis Léxico 
     try:
-        input_stream = InputStream(source_code)
+        input_stream = FileStream(input_filename, encoding='utf-8')
         lexer = gramaticaLexer(input_stream)
         stream = CommonTokenStream(lexer)
-        parser = gramaticaParser(stream)
-        
-        print("Analizando sintaxis...")
-        tree = parser.program() 
-        print("[OK] Análisis Léxico y Sintáctico Exitoso.")
+    except FileNotFoundError:
+        print(f"\n[ERROR] No se encontró el archivo: {input_filename}")
+        return
     except Exception as e:
-        print(f"\n[ERROR] Error de Sintaxis Detectado (Trabajo #{job_index}):")
+        print(f"\n[ERROR] Cargando archivo: {e}")
+        return
+
+    # FASE 2: Análisis Sintáctico 
+    # --- FASE 2: Análisis Sintáctico ---
+    try:
+        parser = gramaticaParser(stream)
+        tree = parser.program() 
+        print("\n[OK] Fase 1/2: Análisis Léxico y Sintáctico Exitoso.")
+
+        print("\n--- 🌳 Árbol Sintáctico (Parse Tree) 🌳 ---")
+        # El 'recog=parser' es necesario para que muestre los nombres de las reglas
+        print(tree.toStringTree(recog=parser))
+        print("---------------------------------------------")
+
+    except Exception as e:
+        print(f"\n[ERROR] Error de Sintaxis Detectado:")
         print(e)
         return
 
-    # 3. Fases 3 y 4: Semántico y Generación de IR
-    print("\nIniciando Análisis Semántico y Generación de IR...")
+    # FASES 3/4: Análisis Semántico y Generación de IR (TAC) 
+    print("\nIniciando Fases 3 y 4 (Semántica y TAC)...")
     try:
         semantic_visitor = SemanticAnalyzerVisitor()
         semantic_visitor.visit(tree)
@@ -57,29 +78,26 @@ def compile_source_code(source_code, job_index):
         print("-" * 40)
         
     except Exception as e:
-        print(f"\n[ERROR] Error Semántico Detectado (Trabajo #{job_index}):")
+        print(f"\n[ERROR] Error Semántico Detectado:")
         print(e)
         return
 
-    # 4. Fase 5: Generación de Código Final (Python)
-    print("\nIniciando Generación de Código Final...")
+    # FASE 5: Generación de Código Final (Python)
+    print("\nIniciando Fase 5 (Generación de Código Python)...")
     try:
         py_generator = PythonCodeGenerator(semantic_visitor.ir.instructions)
         python_code = py_generator.generate()
-        
-        # Generar nombre de archivo único
-        output_filename = f"output_program_{job_index}.py"
         
         with open(output_filename, "w", encoding="utf-8") as f:
             f.write(python_code)
         print(f"[OK] Código Python generado y guardado en: {output_filename}")
         
     except Exception as e:
-        print(f"\n[ERROR] No se pudo escribir el archivo de salida (Trabajo #{job_index}): {e}")
+        print(f"\n[ERROR] No se pudo escribir el archivo de salida: {e}")
         return
 
-    # 5. Fase 6: Ejecución del script generado
-    print(f"\nEjecutando {output_filename}...")
+    # FASE 6: Ejecución del script generado 
+    print("\nIniciando Fase 6 (Ejecución)...")
     try:
         result = subprocess.run(
             [sys.executable, output_filename],
@@ -93,43 +111,16 @@ def compile_source_code(source_code, job_index):
             print(result.stderr)
             
     except subprocess.CalledProcessError as e:
-        print(f"\n[ERROR] El script (Trabajo #{job_index}) falló al ejecutarse.")
+        print(f"\n[ERROR] El script falló al ejecutarse.")
         print(e.stdout)
         print(e.stderr)
     except Exception as e:
-        print(f"\n[ERROR] No se pudo ejecutar el script (Trabajo #{job_index}): {e}")
+        print(f"\n[ERROR] No se pudo ejecutar el script: {e}")
 
-
-def main():
-    """
-    Punto de entrada principal. Lee el input.txt, lo divide
-    y llama al compilador para cada parte.
-    """
-    input_filename = "input.txt"
-    separator = "---NUEVO_TRABAJO---"
-    
-    try:
-        with open(input_filename, "r", encoding="utf-8") as f:
-            file_content = f.read()
-    except FileNotFoundError:
-        print(f"Error: No se encontró el archivo '{input_filename}'")
-        return
-    except Exception as e:
-        print(f"Error leyendo archivo: {e}")
-        return
-
-    # Dividir el contenido del archivo por el separador
-    jobs = file_content.split(separator)
-    
-    print(f"✅ Se encontraron {len(jobs)} trabajos en '{input_filename}'.")
-    
-    # Iterar y compilar cada trabajo
-    for i, job_code in enumerate(jobs):
-        compile_source_code(job_code, i + 1)
-        
     print("\n" + "=" * 50)
-    print("¡COMPILACIÓN DE TODOS LOS TRABAJOS FINALIZADA!")
+    print("¡COMPILACIÓN FINALIZADA!")
     print("=" * 50)
+
 
 if __name__ == '__main__':
     main()

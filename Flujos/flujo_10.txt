@@ -1,0 +1,9 @@
+// Flujo 10: Usando '!=' (Diferente de)
+tarea verificar_alarma {
+    print("Flujo 10: Chequeando alarma");
+    sensor = "OK";
+}
+ir_a sonar_alarma si sensor != "OK";
+tarea sonar_alarma {
+    print("ALARMA: Sensor fallando!");
+}

@@ -1,0 +1,13 @@
+// Error 9: Semántico - Tarea definida dos veces
+tarea inicio {
+    print("Primera definicion");
+}
+
+tarea fin {
+    print("Todo bien");
+}
+
+// Error: 'inicio' ya fue definido
+tarea inicio {
+    print("Segunda definicion");
+}

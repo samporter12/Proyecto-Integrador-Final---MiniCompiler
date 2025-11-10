@@ -1,0 +1,8 @@
+// Error 10: Semántico - 'ir_a' sin tarea previa
+// No hay 'last_task_name' al cual asociar esta transición.
+ir_a fin si estado == "OK";
+
+tarea inicio {
+    estado = "OK";
+}
+tarea fin {}

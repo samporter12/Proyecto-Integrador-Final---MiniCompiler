@@ -1,0 +1,9 @@
+// Flujo 5: Usando números
+tarea verificar_edad {
+    print("Iniciando Flujo 5");
+    edad = 18;
+}
+ir_a mayor_de_edad si edad >= 18;
+tarea mayor_de_edad {
+    print("Acceso concedido (Mayor de edad)");
+}

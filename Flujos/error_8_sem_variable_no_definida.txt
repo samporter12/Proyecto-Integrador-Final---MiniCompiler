@@ -1,0 +1,7 @@
+// Error 8: Semántico - Variable no definida
+tarea inicio {
+    print("Hola");
+}
+// 'variable_secreta' nunca se definió con '='
+ir_a fin si variable_secreta == "OK";
+tarea fin {}

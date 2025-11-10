@@ -1,0 +1,16 @@
+// Flujo 4: Un flujo de 3 pasos
+tarea paso_A {
+    print("Paso A: Recepcion");
+    documento = "RECIBIDO";
+}
+ir_a paso_B si documento == "RECIBIDO";
+
+tarea paso_B {
+    print("Paso B: Revision");
+    documento = "REVISADO";
+}
+ir_a paso_C si documento == "REVISADO";
+
+tarea paso_C {
+    print("Paso C: Aprobado");
+}

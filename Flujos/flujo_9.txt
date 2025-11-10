@@ -1,0 +1,10 @@
+// Flujo 9: Usando otras variables
+tarea login {
+    print("Flujo 9: Iniciando sesion");
+    auth = "INVALIDO";
+    auth = "VALIDO"; // Re-asignación
+}
+ir_a dashboard si auth == "VALIDO";
+tarea dashboard {
+    print("Bienvenido al Dashboard");
+}

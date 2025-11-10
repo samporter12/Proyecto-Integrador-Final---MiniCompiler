@@ -1,0 +1,9 @@
+// Flujo 7: Usando booleanos
+tarea sistema_activo {
+    print("Flujo 7: Verificando sistema...");
+    activo = false;
+}
+ir_a iniciar_sistema si activo == true;
+tarea iniciar_sistema {
+    print("ERROR: El sistema no deberia iniciar.");
+}

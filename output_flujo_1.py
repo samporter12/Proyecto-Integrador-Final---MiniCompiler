@@ -1,30 +1,30 @@
 # --- Código Python Generado Automáticamente ---
 
 # --- Declaración de Variables Globales ---
+estado = None
 t1 = None
-variable_B = None
 
 # --- Definición de Tareas (Funciones) ---
 
-def Chequeo():
-    global variable_B
+def inicio():
     global t1
-    print("Iniciando Flujo 3")
-    variable_B = "PENDIENTE"
-    t1 = variable_B == "PENDIENTE"
+    global estado
+    print("Comenzando Flujo 1")
+    estado = "OK"
+    t1 = estado == "OK"
     if t1:
-        Exito()
+        fin()
     # Etiqueta L1: (manejada por indentación)
     return
 
-def Exito():
-    global variable_B
+def fin():
     global t1
-    print("Flujo 3 Exitoso")
+    global estado
+    print("Terminado Flujo 1")
     return
 
 # --- Punto de Entrada ---
 if __name__ == '__main__':
     print('--- Iniciando Flujo de Trabajo ---')
-    Chequeo()
+    inicio()
     print('--- Flujo de Trabajo Terminado ---')

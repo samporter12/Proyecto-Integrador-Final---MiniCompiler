@@ -1,0 +1,5 @@
+// Error 1: Léxico - Carácter Inválido
+// El símbolo '$' no está definido en nuestra gramática.
+tarea inicio {
+    $variable_ilegal = 10;
+}

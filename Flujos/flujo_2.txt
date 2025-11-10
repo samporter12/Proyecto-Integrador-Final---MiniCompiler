@@ -1,0 +1,5 @@
+// Flujo 2: Tarea simple sin transiciones
+tarea SaludoRapido {
+    print("Este es el Flujo 2");
+    print("No hay transiciones aqui.");
+}

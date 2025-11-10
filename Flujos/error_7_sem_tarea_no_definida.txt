@@ -1,0 +1,6 @@
+// Error 7: Semántico - Tarea de destino no existe
+tarea inicio {
+    estado = "OK";
+}
+// 'tarea_fantasma' no está definida en la SymbolTable
+ir_a tarea_fantasma si estado == "OK";

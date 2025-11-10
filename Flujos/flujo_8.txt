@@ -1,0 +1,15 @@
+// Flujo 8: Bifurcación (dos 'ir_a' desde una tarea)
+// Nota: Nuestra lógica asocia AMBOS 'ir_a' a 'verificar'
+tarea verificar {
+    print("Flujo 8: Verificando puntuacion");
+    puntuacion = 80;
+}
+ir_a aprobado si puntuacion > 70;
+ir_a reprobado si puntuacion <= 70;
+
+tarea aprobado {
+    print("Resultado: APROBADO");
+}
+tarea reprobado {
+    print("Resultado: REPROBADO");
+}

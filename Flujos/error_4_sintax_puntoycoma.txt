@@ -1,0 +1,6 @@
+// Error 4: Sintáctico - Falta ';' en 'ir_a'
+tarea inicio {
+    estado = "OK";
+}
+ir_a fin si estado == "OK" // Falta el ;
+tarea fin {}
