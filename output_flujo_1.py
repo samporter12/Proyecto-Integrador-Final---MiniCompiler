@@ -7,8 +7,8 @@ t1 = None
 # --- Definición de Tareas (Funciones) ---
 
 def inicio():
-    global t1
     global estado
+    global t1
     print("Comenzando Flujo 1")
     estado = "OK"
     t1 = estado == "OK"
@@ -18,8 +18,8 @@ def inicio():
     return
 
 def fin():
-    global t1
     global estado
+    global t1
     print("Terminado Flujo 1")
     return
 
