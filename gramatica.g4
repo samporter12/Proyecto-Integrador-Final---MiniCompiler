@@ -1,4 +1,3 @@
-// Archivo: gramatica.g4
 grammar gramatica;
 
 /* -----------------

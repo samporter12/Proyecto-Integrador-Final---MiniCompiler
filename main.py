@@ -1,6 +1,5 @@
-# Archivo: main.py
-import sys  # Módulo para leer argumentos de la línea de comandos
-import os   # Módulo para manejar nombres de archivos y rutas
+import sys  
+import os 
 import subprocess
 from antlr4 import *
 
@@ -15,15 +14,13 @@ def main():
     if len(sys.argv) != 2:
         print("Error: Debes proporcionar el nombre del archivo de entrada.")
         print("Uso: python main.py <nombre_archivo.txt>")
-        return # Salir del script si no se usa correctamente
+        return 
     
     input_filename = sys.argv[1] # El nombre del archivo (ej: 'flujo_1.txt')
 
     # PASO 2: Definir el nombre del archivo de salida
-    # Vamos a crear un nombre de salida basado en la entrada
-    # Ej: 'flujo_1.txt' -> 'output_flujo_1.py'
-    base_name = os.path.basename(input_filename) # 'flujo_1.txt'
-    name_without_ext = os.path.splitext(base_name)[0] # 'flujo_1'
+    base_name = os.path.basename(input_filename) 
+    name_without_ext = os.path.splitext(base_name)[0] 
     output_filename = f"output_{name_without_ext}.py"
     
     print("=" * 50)
@@ -45,14 +42,13 @@ def main():
         return
 
     # FASE 2: Análisis Sintáctico 
-    # --- FASE 2: Análisis Sintáctico ---
     try:
         parser = gramaticaParser(stream)
         tree = parser.program() 
         print("\n[OK] Fase 1/2: Análisis Léxico y Sintáctico Exitoso.")
 
         print("\n--- 🌳 Árbol Sintáctico (Parse Tree) 🌳 ---")
-        # El 'recog=parser' es necesario para que muestre los nombres de las reglas
+        # El 'recog=parser' muestra el nombre de las reglas
         print(tree.toStringTree(recog=parser))
         print("---------------------------------------------")
 
@@ -69,14 +65,14 @@ def main():
         
         print("[OK] Análisis Semántico Exitoso.")
         
-        # Reportamos el resultado de la Fase 3 (Tabla de Símbolos).
+        # Reportamos el resultado de la Fase 3
         print("-" * 40)
         print("Tabla de Símbolos:")
         print(f"  Tareas: {list(semantic_visitor.symbol_table.tasks.keys())}")
         print(f"  Variables: {list(semantic_visitor.symbol_table.variables.keys())}")
         print("-" * 40)
         
-        # Reportamos el resultado de la Fase 4 (Código Intermedio TAC).
+        # Reportamos el resultado de la Fase 4 
         print("\nCódigo Intermedio (TAC):")
         print(semantic_visitor.ir)
         print("-" * 40)
@@ -86,7 +82,7 @@ def main():
         print(e)
         return
 
-    # FASE 5: Generación de Código Final (Python)
+    # FASE 5: Generación de Código Final
     print("\nIniciando Fase 5 (Generación de Código Python)...")
     try:
         # Creamos el generador pasando nuestra lista de instrucciones TAC.
@@ -105,8 +101,6 @@ def main():
     # FASE 6: Ejecución del script generado 
     print("\nIniciando Fase 6 (Ejecución)...")
     try:
-        # Usamos subprocess.run para ejecutar el archivo .py con el intérprete de Python del sistema.
-        # Esto verifica que el código generado sea realmente ejecutable.
         result = subprocess.run(
             [sys.executable, output_filename],
             capture_output=True, text=True, check=True
